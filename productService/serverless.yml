@@ -23,6 +23,7 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs18.x
+  region: us-east-1
   environment:
     frontendURL: https://d29cd8w0x1ho4r.cloudfront.net
     PRODUCTS_TABLE: products
@@ -30,21 +31,21 @@ provider:
   iam:
     role:
       statements:
-        - Effect: "Allow"
+        - Effect: 'Allow'
           Action:
-            - "dynamodb:Scan"
-            - "dynamodb:GetItem"
-            - "dynamodb:PutItem"
-          Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCTS_TABLE}"
-        - Effect: "Allow"
+            - 'dynamodb:Scan'
+            - 'dynamodb:GetItem'
+            - 'dynamodb:PutItem'
+          Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCTS_TABLE}'
+        - Effect: 'Allow'
           Action:
-            - "dynamodb:Scan"
-            - "dynamodb:GetItem"
-          Resource: "arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.STOCK_TABLE}"
+            - 'dynamodb:Scan'
+            - 'dynamodb:GetItem'
+          Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.STOCK_TABLE}'
   httpApi:
     cors:
       allowedOrigins:
-        - https://d1wfixy1n5oib3.cloudfront.net
+        - https://d29cd8w0x1ho4r.cloudfront.net
       allowedHeaders:
         - Content-Type
 
@@ -95,7 +96,7 @@ functions:
       - http:
           path: products/{productId}
           method: get
-    createProduct:
+  createProduct:
     handler: handler.createProduct
     events:
       - httpApi:
