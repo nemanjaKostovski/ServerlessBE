@@ -1,3 +1,3 @@
-export { getProductsById } from './getProductsById.mjs';
-export { getProductsList } from './getProductsList.mjs';
-export { createProduct } from './createProduct.mjs';
+export { getProductsByIdHandler } from './getProductsByIdHandler.mjs';
+export { getProductsListHandler } from './getProductsListHandler.mjs';
+export { createProductHandler } from './createProductHandler.mjs';
