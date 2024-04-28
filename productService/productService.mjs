@@ -1,6 +1,17 @@
 const PRODUCTS_TABLE = 'products';
 const STOCK_TABLE = 'stock';
 
+import {
+  DynamoDBClient,
+  GetItemCommand,
+  PutItemCommand,
+  ScanCommand,
+} from '@aws-sdk/client-dynamodb';
+import { marshall } from '@aws-sdk/util-dynamodb';
+import { randomUUID } from 'crypto';
+
+const dynamoDbClient = new DynamoDBClient({ region: 'us-east-1' });
+
 export async function createProduct(product) {
   try {
     const productId = randomUUID();

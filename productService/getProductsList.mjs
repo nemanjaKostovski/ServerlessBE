@@ -1,7 +1,8 @@
 import { getProductList } from './productService.mjs';
 
-export const getProductsList = async () => {
+export const getProductsList = async (event) => {
   try {
+    console.log('getProductList event: ', event);
     const products = await getProductList();
     return {
       statusCode: 200,

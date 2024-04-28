@@ -25,29 +25,29 @@ provider:
   runtime: nodejs18.x
   region: us-east-1
   environment:
-    frontendURL: https://d29cd8w0x1ho4r.cloudfront.net
+    frontendURL: https://d1yahz2ebt037i.cloudfront.net
     PRODUCTS_TABLE: products
     STOCK_TABLE: stock
-  # iam:
-  #   role:
-  #     statements:
-  #       - Effect: 'Allow'
-  #         Action:
-  #           - 'dynamodb:Scan'
-  #           - 'dynamodb:GetItem'
-  #           - 'dynamodb:PutItem'
-  #         Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCTS_TABLE}'
-  #       - Effect: 'Allow'
-  #         Action:
-  #           - 'dynamodb:Scan'
-  #           - 'dynamodb:GetItem'
-  #         Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.STOCK_TABLE}'
-  # httpApi:
-  #   cors:
-  #     allowedOrigins:
-  #       - https://d29cd8w0x1ho4r.cloudfront.net
-  #     allowedHeaders:
-  #       - Content-Type
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - 'dynamodb:Scan'
+            - 'dynamodb:GetItem'
+            - 'dynamodb:PutItem'
+          Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCTS_TABLE}'
+        - Effect: 'Allow'
+          Action:
+            - 'dynamodb:Scan'
+            - 'dynamodb:GetItem'
+          Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.STOCK_TABLE}'
+  httpApi:
+    cors:
+      allowedOrigins:
+        - https://d1yahz2ebt037i.cloudfront.net
+      allowedHeaders:
+        - Content-Type
 
 # you can overwrite defaults here
 #  stage: dev

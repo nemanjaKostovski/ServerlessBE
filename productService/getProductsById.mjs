@@ -2,6 +2,7 @@ import { getProductById } from './productService.mjs';
 
 export const getProductsById = async (event) => {
   try {
+    console.log('getProductById event: ', event);
     const productId = event.pathParameters.productId;
     const product = await getProductById(productId);
 
