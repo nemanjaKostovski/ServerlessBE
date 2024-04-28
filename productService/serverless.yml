@@ -28,26 +28,26 @@ provider:
     frontendURL: https://d29cd8w0x1ho4r.cloudfront.net
     PRODUCTS_TABLE: products
     STOCK_TABLE: stock
-  iam:
-    role:
-      statements:
-        - Effect: 'Allow'
-          Action:
-            - 'dynamodb:Scan'
-            - 'dynamodb:GetItem'
-            - 'dynamodb:PutItem'
-          Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCTS_TABLE}'
-        - Effect: 'Allow'
-          Action:
-            - 'dynamodb:Scan'
-            - 'dynamodb:GetItem'
-          Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.STOCK_TABLE}'
-  httpApi:
-    cors:
-      allowedOrigins:
-        - https://d29cd8w0x1ho4r.cloudfront.net
-      allowedHeaders:
-        - Content-Type
+  # iam:
+  #   role:
+  #     statements:
+  #       - Effect: 'Allow'
+  #         Action:
+  #           - 'dynamodb:Scan'
+  #           - 'dynamodb:GetItem'
+  #           - 'dynamodb:PutItem'
+  #         Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCTS_TABLE}'
+  #       - Effect: 'Allow'
+  #         Action:
+  #           - 'dynamodb:Scan'
+  #           - 'dynamodb:GetItem'
+  #         Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.STOCK_TABLE}'
+  # httpApi:
+  #   cors:
+  #     allowedOrigins:
+  #       - https://d29cd8w0x1ho4r.cloudfront.net
+  #     allowedHeaders:
+  #       - Content-Type
 
 # you can overwrite defaults here
 #  stage: dev
