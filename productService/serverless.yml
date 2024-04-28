@@ -85,19 +85,19 @@ provider:
 
 functions:
   getProductsList:
-    handler: handler.getProductsList
+    handler: handler.getProductsListHandler
     events:
       - http:
           path: products
           method: get
   getProductsById:
-    handler: handler.getProductsById
+    handler: handler.getProductsByIdHandler
     events:
       - http:
           path: products/{productId}
           method: get
   createProduct:
-    handler: handler.createProduct
+    handler: handler.createProductHandler
     events:
       - httpApi:
           path: /products
