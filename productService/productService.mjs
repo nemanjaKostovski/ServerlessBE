@@ -1,25 +1,19 @@
-const PRODUCTS_TABLE = 'products';
-const STOCK_TABLE = 'stock';
-
-import {
-  DynamoDBClient,
-  GetItemCommand,
-  PutItemCommand,
-  ScanCommand,
-} from '@aws-sdk/client-dynamodb';
-import { marshall } from '@aws-sdk/util-dynamodb';
+import AWS from 'aws-sdk';
 import { randomUUID } from 'crypto';
 
-const dynamoDbClient = new DynamoDBClient({ region: 'us-east-1' });
+const dynamoDBClient = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' });
+
+const PRODUCTS_TABLE = 'products';
+const STOCK_TABLE = 'stock';
 
 export async function createProduct(product) {
   try {
     const productId = randomUUID();
     const params = {
       TableName: PRODUCTS_TABLE,
-      Item: marshall({ productId, ...product }),
+      Item: { productId, ...product },
     };
-    await dynamoDbClient.send(new PutItemCommand(params));
+    await dynamoDBClient.put(params).promise();
   } catch (error) {
     console.error(error);
     throw new Error('Could not create product');
@@ -28,24 +22,29 @@ export async function createProduct(product) {
 
 export async function getProductList() {
   try {
-    const params = {
+    const productsParams = {
       TableName: PRODUCTS_TABLE,
     };
-    const products = await dynamoDbClient.send(new ScanCommand(params));
+    const productsResponse = await dynamoDBClient
+      .scan(productsParams)
+      .promise();
 
     const stockParams = {
       TableName: STOCK_TABLE,
     };
+    const stockResponse = await dynamoDBClient.scan(stockParams).promise();
 
-    const stock_data = await dynamoDbClient.send(new ScanCommand(stockParams));
-    const stock_map = {};
-    stock_data.Items.forEach((item) => {
-      stock_map[item.productId] = item.count;
+    const stockMap = {};
+    stockResponse.Items.forEach((item) => {
+      stockMap[item.productId] = item.count;
     });
-    products.Items.forEach((item) => {
-      item.count = stock_map[item.id];
-    });
-    return products.Items;
+
+    const productList = productsResponse.Items.map((item) => ({
+      ...item,
+      count: stockMap[item.productId] || 0,
+    }));
+
+    return productList;
   } catch (error) {
     console.error(error);
     throw new Error('Could not retrieve products');
@@ -56,12 +55,10 @@ export async function getProductById(productId) {
   try {
     const params = {
       TableName: PRODUCTS_TABLE,
-      Key: marshall({
-        productId,
-      }),
+      Key: { productId },
     };
-    const product = await dynamoDbClient.send(new GetItemCommand(params));
-    return product.Item;
+    const productResponse = await dynamoDBClient.get(params).promise();
+    return productResponse.Item;
   } catch (error) {
     console.error(error);
     throw new Error('Could not retrieve product');

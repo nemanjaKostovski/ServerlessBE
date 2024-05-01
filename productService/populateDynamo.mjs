@@ -1,17 +1,16 @@
-import { DynamoDBClient, PutItemCommand } from '@aws-sdk/client-dynamodb';
-import { marshall } from '@aws-sdk/util-dynamodb';
+import AWS from 'aws-sdk';
 import { products, stock } from './products.mjs';
 
-const dynamoDBClient = new DynamoDBClient({ region: 'us-east-1' });
+const dynamoDBClient = new AWS.DynamoDB.DocumentClient({ region: 'us-east-1' });
 
 async function insertDynamo(table_name, items) {
   try {
     for (const item of items) {
       const params = {
         TableName: table_name,
-        Item: marshall(item),
+        Item: item,
       };
-      await dynamoDBClient.send(new PutItemCommand(params));
+      await dynamoDBClient.put(params).promise();
     }
   } catch (error) {
     console.error(error);
