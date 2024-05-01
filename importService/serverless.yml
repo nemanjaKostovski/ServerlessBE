@@ -1,9 +1,9 @@
 service: import-service
+frameworkVersion: '3'
 
 provider:
   name: aws
   runtime: nodejs20.x
-  stage: dev
   region: us-east-1
   environment:
     BUCKET_NAME: import-uploaded-bucket
