@@ -23,6 +23,31 @@ frameworkVersion: '3'
 provider:
   name: aws
   runtime: nodejs18.x
+  region: us-east-1
+  environment:
+    frontendURL: https://d1yahz2ebt037i.cloudfront.net
+    PRODUCTS_TABLE: products
+    STOCK_TABLE: stock
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action:
+            - 'dynamodb:Scan'
+            - 'dynamodb:GetItem'
+            - 'dynamodb:PutItem'
+          Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.PRODUCTS_TABLE}'
+        - Effect: 'Allow'
+          Action:
+            - 'dynamodb:Scan'
+            - 'dynamodb:GetItem'
+          Resource: 'arn:aws:dynamodb:${self:provider.region}:*:table/${self:provider.environment.STOCK_TABLE}'
+  httpApi:
+    cors:
+      allowedOrigins:
+        - https://d1yahz2ebt037i.cloudfront.net
+      allowedHeaders:
+        - Content-Type
 
 # you can overwrite defaults here
 #  stage: dev
@@ -60,17 +85,23 @@ provider:
 
 functions:
   getProductsList:
-    handler: handler.getProductsList
+    handler: handler.getProductsListHandler
     events:
       - http:
           path: products
           method: get
   getProductsById:
-    handler: handler.getProductsById
+    handler: handler.getProductsByIdHandler
     events:
       - http:
           path: products/{productId}
           method: get
+  createProduct:
+    handler: handler.createProductHandler
+    events:
+      - httpApi:
+          path: /products
+          method: POST
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -122,3 +153,43 @@ functions:
 #     NewOutput:
 #       Description: "Description for the output"
 #       Value: "Some output value"
+resources:
+  Resources:
+    ProductsDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.PRODUCTS_TABLE}
+        AttributeDefinitions:
+          - AttributeName: productId
+            AttributeType: S
+          - AttributeName: title
+            AttributeType: S
+        KeySchema:
+          - AttributeName: productId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5
+        GlobalSecondaryIndexes:
+          - IndexName: titleIndex
+            KeySchema:
+              - AttributeName: title
+                KeyType: HASH
+            Projection:
+              ProjectionType: ALL
+            ProvisionedThroughput:
+              ReadCapacityUnits: 5
+              WriteCapacityUnits: 5
+    StockDynamoDBTable:
+      Type: AWS::DynamoDB::Table
+      Properties:
+        TableName: ${self:provider.environment.STOCK_TABLE}
+        AttributeDefinitions:
+          - AttributeName: productId
+            AttributeType: S
+        KeySchema:
+          - AttributeName: productId
+            KeyType: HASH
+        ProvisionedThroughput:
+          ReadCapacityUnits: 5
+          WriteCapacityUnits: 5

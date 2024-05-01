@@ -12,7 +12,8 @@
   "dependencies": {
     "@aws-sdk/client-dynamodb": "^3.564.0",
     "@aws-sdk/util-dynamodb": "^3.564.0",
-    "aws-sdk": "^2.1608.0",
+    "aws-sdk": "^2.1610.0",
+    "csv-parser": "^3.0.0",
     "serverless": "^3.38.0",
     "uuid": "^9.0.1"
   }
