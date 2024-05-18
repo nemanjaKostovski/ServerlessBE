@@ -102,6 +102,19 @@ functions:
       - httpApi:
           path: /products
           method: POST
+  catalogBatchProcess:
+    handler: handler.catalogBatchProcess
+    environment:
+      CREATE_PRODUCT_TOPIC_ARN:
+        Ref: CreateProductTopic
+    events:
+      - sqs:
+          arn:
+            Fn::GetAtt:
+              - CatalogItemsQueue
+              - Arn
+          batchSize: 5
+
 #    The following are a few example events you can configure
 #    NOTE: Please make sure to change your handler code to work with those events
 #    Check the event documentation for details
@@ -193,3 +206,18 @@ resources:
         ProvisionedThroughput:
           ReadCapacityUnits: 5
           WriteCapacityUnits: 5
+    CatalogItemsQueue:
+      Type: AWS::SQS::Queue
+      Properties:
+        QueueName: CatalogItemsQueue
+    CreateProductTopic:
+      Type: AWS::SNS::Topic
+      Properties:
+        TopicName: CreateProductTopic
+    ProductTopicSubscription:
+      Type: AWS::SNS::Subscription
+      Properties:
+        Protocol: email
+        TopicArn:
+          Ref: CreateProductTopic
+        Endpoint: nemanjakostovski@gmail.com
