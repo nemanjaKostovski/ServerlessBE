@@ -7,6 +7,8 @@ provider:
   region: us-east-1
   environment:
     BUCKET_NAME: import-uploaded-bucket
+    SQS_QUEUE_URL: https://sqs.us-east-1.amazonaws.com/059551633106/CatalogItemsQueue
+    SQS_QUEUE_NAME: CatalogItemsQueue
   iamRoleStatements:
     - Effect: Allow
       Action:
@@ -16,6 +18,11 @@ provider:
         - s3:CopyObject
         - s3:DeleteObject
       Resource: arn:aws:s3:::${self:provider.environment.BUCKET_NAME}/*
+    - Effect: Allow
+      Action:
+        - sqs:SendMessage
+        - sqs:GetQueueUrl
+      Resource: 'arn:aws:sqs:${self:provider.region}:${aws:accountId}:CatalogItemsQueue'
 
 functions:
   importProductsFile:
