@@ -1,5 +1,5 @@
 import { PublishCommand, SNSClient } from '@aws-sdk/client-sns';
-import { createProduct } from 'productService.mjs';
+import { createProduct } from './productService.mjs';
 
 const snsClient = new SNSClient();
 export async function catalogBatchProcess(event, context) {
