@@ -1,0 +1,19 @@
+service: authorization-service
+frameworkVersion: '3'
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  region: us-east-1
+
+functions:
+  basicAuthorizer:
+    handler: handler.basicAuthorizer
+plugins:
+  - serverless-dotenv-plugin
+
+custom:
+  dotenv:
+    required:
+      env:
+        - nemanjaKostovski
