@@ -1,0 +1,21 @@
+{
+  "name": "serverlessbe",
+  "version": "1.0.0",
+  "description": "Backend for Serverless AWS course",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [],
+  "author": "Nemanja Kostovski",
+  "license": "ISC",
+  "dependencies": {
+    "@aws-sdk/client-dynamodb": "^3.564.0",
+    "@aws-sdk/util-dynamodb": "^3.564.0",
+    "aws-sdk": "^2.1610.0",
+    "csv-parser": "^3.0.0",
+    "serverless": "^3.38.0",
+    "serverless-dotenv-plugin": "^6.0.0",
+    "uuid": "^9.0.1"
+  }
+}
