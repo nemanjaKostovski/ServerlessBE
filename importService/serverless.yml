@@ -5,6 +5,12 @@ provider:
   name: aws
   runtime: nodejs20.x
   region: us-east-1
+  httpApi:
+    cors: true
+    authorizers:
+      basicAuthorizer:
+        type: request
+        # functionArn: arn:aws:lambda:us-east-1:730335531456:function:authorization-service-dev-basicAuthorizer
   environment:
     BUCKET_NAME: import-uploaded-bucket
     SQS_QUEUE_URL: https://sqs.us-east-1.amazonaws.com/059551633106/CatalogItemsQueue
@@ -31,6 +37,8 @@ functions:
       - httpApi:
           path: /import
           method: GET
+          authorizer:
+            name: basicAuthorizer
   importFileParser:
     handler: handler.importFileParser
     events:

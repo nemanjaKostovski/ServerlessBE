@@ -10,6 +10,10 @@ import csvParser from 'csv-parser';
 const s3Client = new S3Client();
 const sqsClient = new SQSClient();
 
+const BUCKET_NAME = 'import-uploaded-bucket';
+const SQS_QUEUE_URL =
+  'https://sqs.us-east-1.amazonaws.com/059551633106/CatalogItemsQueue';
+
 const sendMessagePromises = [];
 
 const sendMessage = async (queueUrl, messageBody) => {
@@ -25,7 +29,7 @@ const sendMessage = async (queueUrl, messageBody) => {
 export async function importFileParser(event, context) {
   const recordPromises = event.Records.map(async (record) => {
     const getObjectParams = {
-      Bucket: process.env.BUCKET_NAME,
+      Bucket: BUCKET_NAME,
       Key: record.s3.object.key,
     };
 
@@ -33,7 +37,7 @@ export async function importFileParser(event, context) {
       const { Body } = await s3Client.send(
         new GetObjectCommand(getObjectParams)
       );
-      const queueUrl = process.env.SQS_QUEUE_URL;
+      const queueUrl = SQS_QUEUE_URL;
 
       return new Promise((resolve, reject) => {
         Body.pipe(csvParser())
